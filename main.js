@@ -5,12 +5,16 @@ const downloadDiv = document.getElementById("download-div");
 const preloader = document.getElementById("preloader");
 const lineSplitCount = document.getElementById("line-slice-count");
 const fileInput = document.getElementById("file-input");
+const removeFirstColumnCheck = document.getElementById(
+  "remove-first-column-check"
+);
 
 let lines = undefined;
 let fileName = undefined;
 let header = undefined;
 let sliceCount = undefined;
 let newData = undefined;
+let isRemoveFirstColumn = removeFirstColumnCheck.checked;
 
 ////////////////////////////////
 //          FUNCTIONS
@@ -28,7 +32,10 @@ function handleContent(contents) {
 
   // SOME JOB HERE
   newData = [header, ...everyNth(lines, sliceCount)];
-
+  // REMOVE LAST STL
+  if (isRemoveFirstColumn) {
+    newData = newData.map((s) => s.replace(/.+\t/g, ""));
+  }
   hidePreloader();
   showDownloadStuff();
 }
@@ -99,6 +106,11 @@ function hidePreloader() {
 lineSplitCount.addEventListener("change", (e) => {
   sliceCount = Number(e.target.value);
   console.log(sliceCount);
+});
+
+removeFirstColumnCheck.addEventListener("change", (e) => {
+  isRemoveFirstColumn = removeFirstColumnCheck.checked;
+  console.log(isRemoveFirstColumn);
 });
 
 hideDownloadStuff();
